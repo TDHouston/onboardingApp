@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>Custom-Onboarding-Flow</artifactId>
+	<artifactId>back-end</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Custom-Onboarding-Flow</name>
+	<name>back-end</name>
 	<description>Full Stack Engineering Exercise</description>
 	<url/>
 	<licenses>
