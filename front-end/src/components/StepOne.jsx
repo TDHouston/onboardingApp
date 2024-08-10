@@ -7,7 +7,7 @@ const StepOne = ({ nextStep, saveStepData }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Save the data or dispatch an action
-    saveStepData({ email, password })
+    saveStepData({ email, password });
     nextStep();
   };
 

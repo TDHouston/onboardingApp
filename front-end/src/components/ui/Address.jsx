@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 
 const Address = ({ saveStepData, formData }) => {
-  const [street, setStreet] = useState(formData.street || '')
-  const [city, setCity] = useState(formData.city || '')
-  const [state, setState] = useState(formData.state || '')
-  const [zipCode, setZipCode] = useState(formData.zipCode || '')
+  const [street, setStreet] = useState(formData.street || "");
+  const [city, setCity] = useState(formData.city || "");
+  const [state, setState] = useState(formData.state || "");
+  const [zipCode, setZipCode] = useState(formData.zipCode || "");
 
   useEffect(() => {
-    saveStepData({ street, city, state, zipCode })
-  }, [street, city, state, zipCode, saveStepData])
+    saveStepData({ street, city, state, zipCode });
+  }, [street, city, state, zipCode, saveStepData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -18,10 +18,9 @@ const Address = ({ saveStepData, formData }) => {
     if (name === "zipcode") setZipCode(value);
   };
 
-
   return (
     <form>
-      <div >
+      <div>
         <label
           htmlFor="street"
           className="block text-sm font-medium leading-6 text-gray-900"

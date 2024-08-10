@@ -11,7 +11,6 @@ const Wizard = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
   const [formData, setFormData] = useState({});
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
 
   const step2Components = useSelector((state) => state.admin.step2Components);
@@ -28,24 +27,24 @@ const Wizard = () => {
   };
 
   const nextStep = () => {
-    const nextStep = currentStep + 1;
-    setCurrentStep(nextStep);
-    updateProgress(nextStep);
+    if (currentStep < 3) {
+      const nextStep = currentStep + 1;
+      setCurrentStep(nextStep);
+      updateProgress(nextStep);
+    }
   };
 
   const prevStep = () => {
-    const prevStep = currentStep - 1;
-    setCurrentStep(prevStep);
-    updateProgress(prevStep);
+    if (currentStep > 0) {
+      const prevStep = currentStep - 1;
+      setCurrentStep(prevStep);
+      updateProgress(prevStep);
+    }
   };
 
   const submitForm = async () => {
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/users",
-        formData
-      );
-      setIsSubmitted(true);
+      await axios.post("http://localhost:8080/api/users", formData);
       setShowMessage(true);
     } catch (error) {
       console.error("Error saving data:", error);
@@ -56,8 +55,7 @@ const Wizard = () => {
     setShowMessage(false);
     setCurrentStep(0);
     setFormData({});
-    setProgress(0); 
-
+    setProgress(0);
   };
 
   if (showMessage) {
@@ -137,16 +135,16 @@ const Wizard = () => {
           {step3Components.map((component) => renderComponent(component))}
           <div className="w-full flex flex-row justify-between mt-5">
             <button
-              onClick={() => {
-                saveStepData({});
-                nextStep();
-              }}
+              onClick={prevStep}
               className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
             >
               Back
             </button>
             <button
-              onClick={nextStep}
+              onClick={() => {
+                saveStepData({});
+                nextStep();
+              }}
               className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none"
             >
               Next
