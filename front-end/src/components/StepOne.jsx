@@ -14,7 +14,7 @@ const StepOne = ({ nextStep, saveStepData }) => {
   return (
     <>
       <div>
-        <h2 className="font-bold">Start by entering an email and password:</h2>
+        <h2 className="font-bold text-sm">Start by entering an email and password:</h2>
       </div>
 
       <form className="w-1/3 lg mt-4" action="" onSubmit={handleSubmit}>

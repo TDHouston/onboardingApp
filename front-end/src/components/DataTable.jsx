@@ -11,8 +11,11 @@ const DataTable = () => {
   }, [dispatch]);
 
   return (
-    <div className="relative overflow-x-auto shadow-md">
-      <table className="w-full text-sm text-left text-gray-500">
+    <div className="w-screen h-screen overflow-x-auto shadow-md flex flex-col items-center">
+      <div className='my-5'>
+        <h1 className='font-semibold py-4 text-2xl'>User Database</h1>
+      </div>
+      <table className="w-11/12 text-sm text-left text-gray-500 border">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>
             <th scope="col" className="px-6 py-3">Id</th>

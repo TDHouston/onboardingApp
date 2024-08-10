@@ -90,7 +90,7 @@ const Wizard = () => {
   return (
     <div className="w-screen h-screen flex flex-col justify-center items-center">
       <header className="w-full py-3">
-        <h1 className="flex justify-center font-semibold py-2">
+        <h1 className="flex justify-center font-semibold py-4 text-2xl">
           Welcome To The Onboarding Wizard
         </h1>
         <div className="w-full flex justify-center">
