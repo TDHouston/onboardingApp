@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import StepOne from "./steps/StepOne";
-import Birthdate from "./forms/BirthDate";
-import AboutMe from "./forms/AboutMe";
-import Address from "./forms/Address";
+import StepOne from "./StepOne";
+import Birthdate from "./ui/BirthDate";
+import AboutMe from "./ui/AboutMe";
+import Address from "./ui/Address";
 
 const Wizard = () => {
   const [currentStep, setCurrentStep] = useState(0);
