@@ -63,17 +63,41 @@ const Wizard = () => {
 
       {currentStep === 0 && <StepOne nextStep={nextStep} />}
       {currentStep === 1 && (
-        <div>
+        <div className="w-7/12 md:w-1/3" >
           {step2Components.map((component) => renderComponent(component))}
-          <button onClick={prevStep}>Back</button>
-          <button onClick={nextStep}>Next</button>
+          <div className="w-full flex flex-row justify-between mt-5">
+            <button
+              onClick={prevStep}
+              className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
+            >
+              Back
+            </button>
+            <button
+              onClick={nextStep}
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none"
+            >
+              Next
+            </button>
+          </div>
         </div>
       )}
       {currentStep === 2 && (
-        <div>
+        <div className="w-7/12 md:w-1/3" >
           {step3Components.map((component) => renderComponent(component))}
-          <button onClick={prevStep}>Back</button>
-          <button onClick={nextStep}>Next</button>
+          <div className="w-full flex flex-row justify-between mt-5">
+            <button
+              onClick={prevStep}
+              className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
+            >
+              Back
+            </button>
+            <button
+              onClick={nextStep}
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none"
+            >
+              Next
+            </button>
+          </div>
         </div>
       )}
     </div>
