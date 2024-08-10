@@ -27,9 +27,9 @@ DROP TABLE IF EXISTS `ComponentConfig`;
 CREATE TABLE `ComponentConfig` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `componentName` varchar(255) DEFAULT NULL,
-  `pageNumber` int DEFAULT NULL,
+  `pageNumber` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +38,6 @@ CREATE TABLE `ComponentConfig` (
 
 LOCK TABLES `ComponentConfig` WRITE;
 /*!40000 ALTER TABLE `ComponentConfig` DISABLE KEYS */;
-INSERT INTO `ComponentConfig` VALUES (1,'TextField',2),(3,'UpdatedComponent',2),(4,'birthDate',2),(5,'address',2);
 /*!40000 ALTER TABLE `ComponentConfig` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -60,7 +59,7 @@ CREATE TABLE `User` (
   `street` varchar(255) DEFAULT NULL,
   `zipCode` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -69,7 +68,6 @@ CREATE TABLE `User` (
 
 LOCK TABLES `User` WRITE;
 /*!40000 ALTER TABLE `User` DISABLE KEYS */;
-INSERT INTO `User` VALUES (1,'About me...','2000-01-01','Anytown','test@example.com','password123','NY','123 Main St','12345'),(3,'Updated about me...',NULL,'Newtown','updated@example.com','123newpassword','CA','456 Another St',NULL);
 /*!40000 ALTER TABLE `User` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -82,4 +80,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-08 17:20:41
+-- Dump completed on 2024-08-10  2:27:21
