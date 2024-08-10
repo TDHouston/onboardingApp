@@ -1,21 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-const Address = () => {
+const Address = ({ saveStepData, formData }) => {
+  const [street, setStreet] = useState(formData.street || '')
+  const [city, setCity] = useState(formData.city || '')
+  const [state, setState] = useState(formData.state || '')
+  const [zipCode, setZipCode] = useState(formData.zipCode || '')
+
+  useEffect(() => {
+    saveStepData({ street, city, state, zipCode })
+  }, [street, city, state, zipCode, saveStepData])
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "street") setStreet(value);
+    if (name === "city") setCity(value);
+    if (name === "state") setState(value);
+    if (name === "zipcode") setZipCode(value);
+  };
+
+
   return (
     <form>
       <div >
         <label
-          htmlFor="street-address"
+          htmlFor="street"
           className="block text-sm font-medium leading-6 text-gray-900"
         >
-          Street address
+          Street
         </label>
         <div>
           <input
-            id="street-address"
-            name="street-address"
+            id="street"
+            name="street"
             type="text"
             autoComplete="street-address"
+            value={street}
+            onChange={handleChange}
             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
           />
         </div>
@@ -34,6 +54,8 @@ const Address = () => {
             name="city"
             type="text"
             autoComplete="address-level2"
+            value={city}
+            onChange={handleChange}
             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
           />
         </div>
@@ -41,17 +63,19 @@ const Address = () => {
 
       <div className="sm:col-span-2 mt-2">
         <label
-          htmlFor="region"
+          htmlFor="state"
           className="block text-sm font-medium leading-6 text-gray-900"
         >
-          State / Province
+          State
         </label>
         <div>
           <input
-            id="region"
-            name="region"
+            id="state"
+            name="state"
             type="text"
-            autoComplete="address-level1"
+            autoComplete="state"
+            value={state}
+            onChange={handleChange}
             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
           />
         </div>
@@ -59,17 +83,19 @@ const Address = () => {
 
       <div className="sm:col-span-2 mt-2">
         <label
-          htmlFor="postal-code"
+          htmlFor="zipcode"
           className="block text-sm font-medium leading-6 text-gray-900"
         >
           ZIP / Postal code
         </label>
         <div>
           <input
-            id="postal-code"
-            name="postal-code"
+            id="zipcode"
+            name="zipcode"
             type="text"
-            autoComplete="postal-code"
+            autoComplete="zipcode"
+            value={zipCode}
+            onChange={handleChange}
             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
           />
         </div>

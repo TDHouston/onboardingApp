@@ -4,13 +4,21 @@ import StepOne from "./StepOne";
 import Birthdate from "./ui/BirthDate";
 import AboutMe from "./ui/AboutMe";
 import Address from "./ui/Address";
+import Summary from "./ui/Summary";
+import axios from 'axios';
+
 
 const Wizard = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [formData, setFormData] = useState({});
 
   const step2Components = useSelector((state) => state.admin.step2Components);
   const step3Components = useSelector((state) => state.admin.step3Components);
+
+  const saveStepData = (data) => {
+    setFormData((prevData) => ({ ...prevData, ...data }));
+  };
 
   const updateProgress = (step) => {
     const totalSteps = 3;
@@ -30,14 +38,24 @@ const Wizard = () => {
     updateProgress(prevStep);
   };
 
+  const submitForm = async () => {
+    try {
+      const response = await axios.post('http://localhost:8080/api/users', formData);
+      console.log('Data saved successfully:', response.data);
+      // Optionally, reset the form or navigate to a different page
+    } catch (error) {
+      console.error('Error saving data:', error);
+    }
+  };
+
   const renderComponent = (component) => {
     switch (component) {
       case "Birthdate":
-        return <Birthdate />;
+        return <Birthdate saveStepData={saveStepData} formData={formData} />;
       case "AboutMe":
-        return <AboutMe />;
+        return <AboutMe saveStepData={saveStepData} formData={formData} />;
       case "Address":
-        return <Address />;
+        return <Address saveStepData={saveStepData} formData={formData} />;
       default:
         return null;
     }
@@ -61,13 +79,38 @@ const Wizard = () => {
         </div>
       </header>
 
-      {currentStep === 0 && <StepOne nextStep={nextStep} />}
+      {currentStep === 0 && <StepOne nextStep={nextStep} saveStepData={saveStepData} />}
       {currentStep === 1 && (
-        <div className="w-7/12 md:w-1/3" >
+        <div className="w-7/12 md:w-1/3">
           {step2Components.map((component) => renderComponent(component))}
           <div className="w-full flex flex-row justify-between mt-5">
             <button
               onClick={prevStep}
+              className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
+            >
+              Back
+            </button>
+            <button
+              onClick={() => {
+                saveStepData({})
+                nextStep()
+              }}
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
+      {currentStep === 2 && (
+        <div className="w-7/12 md:w-1/3">
+          {step3Components.map((component) => renderComponent(component))}
+          <div className="w-full flex flex-row justify-between mt-5">
+            <button
+              onClick={() => {
+                saveStepData({})
+                nextStep()
+              }}
               className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
             >
               Back
@@ -81,24 +124,12 @@ const Wizard = () => {
           </div>
         </div>
       )}
-      {currentStep === 2 && (
-        <div className="w-7/12 md:w-1/3" >
-          {step3Components.map((component) => renderComponent(component))}
-          <div className="w-full flex flex-row justify-between mt-5">
-            <button
-              onClick={prevStep}
-              className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
-            >
-              Back
-            </button>
-            <button
-              onClick={nextStep}
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none"
-            >
-              Next
-            </button>
-          </div>
-        </div>
+      {currentStep === 3 && (
+        <Summary
+          formData={formData}
+          prevStep={prevStep}
+          submitForm={submitForm}
+        />
       )}
     </div>
   );
