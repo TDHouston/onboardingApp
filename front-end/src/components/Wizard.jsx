@@ -5,13 +5,14 @@ import Birthdate from "./ui/BirthDate";
 import AboutMe from "./ui/AboutMe";
 import Address from "./ui/Address";
 import Summary from "./ui/Summary";
-import axios from 'axios';
-
+import axios from "axios";
 
 const Wizard = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
   const [formData, setFormData] = useState({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
 
   const step2Components = useSelector((state) => state.admin.step2Components);
   const step3Components = useSelector((state) => state.admin.step3Components);
@@ -22,7 +23,7 @@ const Wizard = () => {
 
   const updateProgress = (step) => {
     const totalSteps = 3;
-    const newProgress = (step / totalSteps) * 100;
+    const newProgress = Math.round((step / totalSteps) * 100);
     setProgress(newProgress);
   };
 
@@ -40,13 +41,40 @@ const Wizard = () => {
 
   const submitForm = async () => {
     try {
-      const response = await axios.post('http://localhost:8080/api/users', formData);
-      console.log('Data saved successfully:', response.data);
-      // Optionally, reset the form or navigate to a different page
+      const response = await axios.post(
+        "http://localhost:8080/api/users",
+        formData
+      );
+      setIsSubmitted(true);
+      setShowMessage(true);
     } catch (error) {
-      console.error('Error saving data:', error);
+      console.error("Error saving data:", error);
     }
   };
+
+  const handleCloseForm = () => {
+    setShowMessage(false);
+    setCurrentStep(0);
+    setFormData({});
+    setProgress(0); 
+
+  };
+
+  if (showMessage) {
+    return (
+      <div className="w-screen h-screen flex flex-col justify-center items-center">
+        <h2 className="font-bold text-xl mb-4">
+          Thank you! Your data has been submitted successfully.
+        </h2>
+        <button
+          onClick={handleCloseForm}
+          className="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 focus:outline-none"
+        >
+          Close
+        </button>
+      </div>
+    );
+  }
 
   const renderComponent = (component) => {
     switch (component) {
@@ -79,7 +107,9 @@ const Wizard = () => {
         </div>
       </header>
 
-      {currentStep === 0 && <StepOne nextStep={nextStep} saveStepData={saveStepData} />}
+      {currentStep === 0 && (
+        <StepOne nextStep={nextStep} saveStepData={saveStepData} />
+      )}
       {currentStep === 1 && (
         <div className="w-7/12 md:w-1/3">
           {step2Components.map((component) => renderComponent(component))}
@@ -92,8 +122,8 @@ const Wizard = () => {
             </button>
             <button
               onClick={() => {
-                saveStepData({})
-                nextStep()
+                saveStepData({});
+                nextStep();
               }}
               className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none"
             >
@@ -108,8 +138,8 @@ const Wizard = () => {
           <div className="w-full flex flex-row justify-between mt-5">
             <button
               onClick={() => {
-                saveStepData({})
-                nextStep()
+                saveStepData({});
+                nextStep();
               }}
               className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
             >

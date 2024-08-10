@@ -32,7 +32,6 @@ public class UserService {
         if (userToUpdate.isPresent()) {
             User user = userToUpdate.get();
 
-            user.setName(userDetails.getName());
             user.setEmail(userDetails.getEmail());
             user.setPassword(userDetails.getPassword());
             user.setAboutMe(userDetails.getAboutMe());
