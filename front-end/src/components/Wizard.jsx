@@ -1,11 +1,16 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import StepOne from "./steps/StepOne";
-import StepTwo from "./steps/StepTwo";
-import StepThree from "./steps/StepThree";
+import Birthdate from "./forms/BirthDate";
+import AboutMe from "./forms/AboutMe";
+import Address from "./forms/Address";
 
 const Wizard = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
+
+  const step2Components = useSelector((state) => state.admin.step2Components);
+  const step3Components = useSelector((state) => state.admin.step3Components);
 
   const updateProgress = (step) => {
     const totalSteps = 3;
@@ -23,6 +28,19 @@ const Wizard = () => {
     const prevStep = currentStep - 1;
     setCurrentStep(prevStep);
     updateProgress(prevStep);
+  };
+
+  const renderComponent = (component) => {
+    switch (component) {
+      case "Birthdate":
+        return <Birthdate />;
+      case "AboutMe":
+        return <AboutMe />;
+      case "Address":
+        return <Address />;
+      default:
+        return null;
+    }
   };
 
   return (
@@ -44,9 +62,19 @@ const Wizard = () => {
       </header>
 
       {currentStep === 0 && <StepOne nextStep={nextStep} />}
-      {currentStep === 1 && <StepTwo nextStep={nextStep} prevStep={prevStep} />}
+      {currentStep === 1 && (
+        <div>
+          {step2Components.map((component) => renderComponent(component))}
+          <button onClick={prevStep}>Back</button>
+          <button onClick={nextStep}>Next</button>
+        </div>
+      )}
       {currentStep === 2 && (
-        <StepThree prevStep={prevStep} nextStep={nextStep} />
+        <div>
+          {step3Components.map((component) => renderComponent(component))}
+          <button onClick={prevStep}>Back</button>
+          <button onClick={nextStep}>Next</button>
+        </div>
       )}
     </div>
   );

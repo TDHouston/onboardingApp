@@ -3,17 +3,20 @@ import { createSlice } from "@reduxjs/toolkit";
 const adminSlice = createSlice({
   name: "admin",
   initialState: {
-    step2Components: [],
-    step3Components: [],
+    step2Components: ["Birthdate", "AboutMe"],
+    step3Components: ["Address"],
+    availableComponents: ["Birthdate", "AboutMe", "Address"],
   },
   reducers: {
-    setComponents: (state, action) => {
-      state.step2Components = action.payload.step2Components;
-      state.step3Components = action.payload.step3Components;
+    setStep2Components: (state, action) => {
+      state.step2Components = action.payload;
+    },
+    setStep3Components: (state, action) => {
+      state.step3Components = action.payload;
     },
   },
 });
 
-export const { setComponents } = adminSlice.actions;
+export const { setStep2Components, setStep3Components } = adminSlice.actions;
 
 export default adminSlice.reducer;

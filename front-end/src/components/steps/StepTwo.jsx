@@ -1,8 +1,13 @@
 import React from "react";
+import BirthDate from "../forms/BirthDate";
+import AboutMe from "../forms/AboutMe";
 
 const StepTwo = () => {
   return (
-    <div>jakscnja</div>
+    <form action="">
+      {<BirthDate />}
+      {<AboutMe />}
+    </form>
   );
 };
 

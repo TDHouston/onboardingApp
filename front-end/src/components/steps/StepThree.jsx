@@ -1,11 +1,8 @@
-import React from 'react'
+import React from "react";
+import Address from "../forms/Address";
 
 const StepThree = () => {
-  return (
-    <div>
-      Step Three
-    </div>
-  )
-}
+  return <form action="">{<Address />}</form>;
+};
 
-export default StepThree
+export default StepThree;
