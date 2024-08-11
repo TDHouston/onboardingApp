@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin(origins = "https://onboarding-app-ashy.vercel.app/") // Update with your Vercel domain
 public class UserController {
 
     @Autowired
