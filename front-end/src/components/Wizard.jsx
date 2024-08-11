@@ -6,6 +6,7 @@ import AboutMe from "./ui/AboutMe";
 import Address from "./ui/Address";
 import Summary from "./ui/Summary";
 import axios from "axios";
+import apiClient from "../features/apiClient";
 
 const Wizard = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -44,7 +45,7 @@ const Wizard = () => {
 
   const submitForm = async () => {
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/api/users`, formData);
+      await apiClient.post('/api/users', formData);
       setShowMessage(true);
     } catch (error) {
       console.error("Error saving data:", error);
