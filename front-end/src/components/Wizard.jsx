@@ -44,7 +44,7 @@ const Wizard = () => {
 
   const submitForm = async () => {
     try {
-      await axios.post("http://localhost:8080/api/users", formData);
+      await axios.post(`${process.env.REACT_APP_API_URL}/users`, formData);
       setShowMessage(true);
     } catch (error) {
       console.error("Error saving data:", error);
