@@ -5,7 +5,6 @@ import Birthdate from "./ui/BirthDate";
 import AboutMe from "./ui/AboutMe";
 import Address from "./ui/Address";
 import Summary from "./ui/Summary";
-import axios from "axios";
 import apiClient from "../features/apiClient";
 
 const Wizard = () => {
