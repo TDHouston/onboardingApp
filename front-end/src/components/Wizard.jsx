@@ -43,21 +43,11 @@ const Wizard = () => {
   };
 
   const submitForm = async () => {
-    console.log("Submit button clicked");
-    console.log("Form data:", formData);
-
     try {
-      const response = await apiClient.post("/api/users", formData);
-      console.log("Response from server:", response.data);
+      await apiClient.post("/api/users", formData);
       setShowMessage(true);
     } catch (error) {
       console.error("Error saving data:", error);
-      if (error.response) {
-        console.error("Error Response Status:", error.response.status);
-        console.error("Error Response Data:", error.response.data);
-      } else {
-        console.error("No response received:", error.message);
-      }
     }
   };
 
