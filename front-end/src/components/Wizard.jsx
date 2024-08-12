@@ -44,7 +44,7 @@ const Wizard = () => {
 
   const submitForm = async () => {
     try {
-      await apiClient.post(`/api/users`, formData);
+      await apiClient.post(`/users`, formData);
       setShowMessage(true);
     } catch (error) {
       console.error("Error saving data:", error);
