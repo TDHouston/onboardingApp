@@ -18,7 +18,6 @@ const DataTable = () => {
       <table className="w-11/12 text-sm text-left text-gray-500 border">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>
-            <th scope="col" className="px-6 py-3">Id</th>
             <th scope="col" className="px-6 py-3">Email</th>
             <th scope="col" className="px-6 py-3">Password</th>
             <th scope="col" className="px-6 py-3">Birth</th>
@@ -32,7 +31,6 @@ const DataTable = () => {
         <tbody>
           {users.map((user) => (
             <tr key={user.id} className="bg-white border-b">
-              <td className="px-6 py-4 font-medium text-gray-900">{user.id}</td>
               <td className="px-6 py-4 font-medium text-gray-900">{user.email}</td>
               <td className="px-6 py-4 font-medium text-gray-900">{user.password}</td>
               <td className="px-6 py-4 font-medium text-gray-900">{user.birthDate}</td>
