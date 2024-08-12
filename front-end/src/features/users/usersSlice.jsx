@@ -2,12 +2,12 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import apiClient from "../apiClient";
 
 export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
-  const response = await apiClient.get("/api/users");
+  const response = await apiClient.get("/users");
   return response.data;
 });
 
 export const addUser = createAsyncThunk("users/addUser", async (user) => {
-  const response = await apiClient.post("/api/users", user);
+  const response = await apiClient.post("/users", user);
   return response.data;
 });
 
