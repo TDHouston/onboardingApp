@@ -19,7 +19,7 @@ const StepOne = ({ nextStep, saveStepData }) => {
 
       <form className="max-w-md mx-auto mt-4" action="" onSubmit={handleSubmit}>
         <div className="relative">
-          <div className="w-64">
+          <div className="w-72">
             <label
               htmlFor="email"
               className="block text-sm font-medium leading-6 text-gray-900"
@@ -40,7 +40,7 @@ const StepOne = ({ nextStep, saveStepData }) => {
             </div>
           </div>
 
-          <div className="w-64 mt-2">
+          <div className="w-72 mt-2">
             <label
               htmlFor="password"
               className="block text-sm font-medium leading-6 text-gray-900"

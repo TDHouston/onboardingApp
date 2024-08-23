@@ -13,7 +13,7 @@ const BirthDate = ({ saveStepData, formData }) => {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="w-42">
+      <div className="w-42 md:w-46">
         <label
           htmlFor="birthdate"
           className="block text-sm font-medium leading-6 text-gray-900"

@@ -109,7 +109,7 @@ const Wizard = () => {
         <StepOne nextStep={nextStep} saveStepData={saveStepData} />
       )}
       {currentStep === 1 && (
-        <div className="w-11/12 md:w-1/3">
+        <div className="w-11/12 md:w-5/6">
           {step2Components.map((component) => renderComponent(component))}
           <div className="w-full flex flex-row justify-between mt-5">
             <button
@@ -131,7 +131,7 @@ const Wizard = () => {
         </div>
       )}
       {currentStep === 2 && (
-        <div className="w-7/12 md:w-1/3">
+        <div className="w-11/12 md:w-5/6">
           {step3Components.map((component) => renderComponent(component))}
           <div className="w-full flex flex-row justify-between mt-5">
             <button
