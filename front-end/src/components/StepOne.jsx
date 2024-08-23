@@ -17,16 +17,16 @@ const StepOne = ({ nextStep, saveStepData }) => {
         <h2 className="font-bold text-sm">Start by entering an email and password:</h2>
       </div>
 
-      <form className="w-1/3 lg mt-4" action="" onSubmit={handleSubmit}>
-        <div className="flex flex-col items-center">
-          <div className="md:w-80">
+      <form className="max-w-md mx-auto mt-4" action="" onSubmit={handleSubmit}>
+        <div className="relative">
+          <div className="w-64">
             <label
               htmlFor="email"
               className="block text-sm font-medium leading-6 text-gray-900"
             >
               Email address:
             </label>
-            <div>
+            <div className="">
               <input
                 id="email"
                 name="email"
@@ -40,7 +40,7 @@ const StepOne = ({ nextStep, saveStepData }) => {
             </div>
           </div>
 
-          <div className="md:w-80 mt-2">
+          <div className="w-64 mt-2">
             <label
               htmlFor="password"
               className="block text-sm font-medium leading-6 text-gray-900"

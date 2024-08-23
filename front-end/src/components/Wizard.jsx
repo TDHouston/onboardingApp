@@ -94,7 +94,7 @@ const Wizard = () => {
           Welcome To The Onboarding Wizard
         </h1>
         <div className="w-full flex justify-center">
-          <div className="w-2/4 bg-gray-200 rounded-full dark:bg-gray-700 mb-4">
+          <div className="w-3/4 bg-gray-200 rounded-full dark:bg-gray-700 mb-4">
             <div
               className="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
               style={{ width: `${progress}%` }}
@@ -109,7 +109,7 @@ const Wizard = () => {
         <StepOne nextStep={nextStep} saveStepData={saveStepData} />
       )}
       {currentStep === 1 && (
-        <div className="w-7/12 md:w-1/3">
+        <div className="w-11/12 md:w-1/3">
           {step2Components.map((component) => renderComponent(component))}
           <div className="w-full flex flex-row justify-between mt-5">
             <button

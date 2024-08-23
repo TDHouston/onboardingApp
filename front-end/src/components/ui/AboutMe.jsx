@@ -12,7 +12,7 @@ const AboutMe = ({ saveStepData, formData }) => {
   };
 
   return (
-    <div className="p-5">
+    <div className="p-5 w-full">
       <label for="aboutMe" class="block mb-2 text-sm font-medium text-gray-900">
         Tell us something about yourself:
       </label>
