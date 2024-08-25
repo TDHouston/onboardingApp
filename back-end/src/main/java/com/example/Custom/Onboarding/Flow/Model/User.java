@@ -1,9 +1,6 @@
 package com.example.Custom.Onboarding.Flow.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
@@ -14,6 +11,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
+    private String sessionId;
+
     private String email;
     private String password;
     private String aboutMe;
@@ -22,5 +22,7 @@ public class User {
     private String state;
     private String zipCode;
     private String birthDate;
+    private String formData;
+    private int currentStep;
 
 }

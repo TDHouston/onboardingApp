@@ -1,23 +1,39 @@
 import React, { useState } from "react";
+import apiClient from "../features/apiClient";
 
 const StepOne = ({ nextStep, saveStepData }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Save the data or dispatch an action
-    saveStepData({ email, password });
-    nextStep();
+    try {
+      const response = await apiClient.post("/users/create", {
+        email,
+        password,
+      });
+      const { sessionId } = response.data;
+
+      localStorage.setItem("sessionId", sessionId);
+      saveStepData({ email, password });
+
+      nextStep();
+    } catch (err) {
+      console.error("Error creating user:", err);
+      setError("Failed to create user. Please try again.");
+    }
   };
 
   return (
     <>
       <div>
-        <h2 className="font-bold text-sm">Start by entering an email and password:</h2>
+        <h2 className="font-bold text-sm">
+          Start by entering an email and password:
+        </h2>
       </div>
 
-      <form className="max-w-md mx-auto mt-4" action="" onSubmit={handleSubmit}>
+      <form className="max-w-md mx-auto mt-4" onSubmit={handleSubmit}>
         <div className="relative">
           <div className="w-72">
             <label
@@ -61,6 +77,8 @@ const StepOne = ({ nextStep, saveStepData }) => {
             </div>
           </div>
         </div>
+
+        {error && <div className="mt-2 text-red-600 text-sm">{error}</div>}
 
         <div className="flex justify-center mt-5">
           <button

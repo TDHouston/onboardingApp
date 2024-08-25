@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import StepOne from "./StepOne";
 import Birthdate from "./ui/BirthDate";
@@ -10,14 +10,70 @@ import apiClient from "../features/apiClient";
 const Wizard = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    aboutMe: "",
+    street: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    birthDate: "",
+  });
   const [showMessage, setShowMessage] = useState(false);
 
   const step2Components = useSelector((state) => state.admin.step2Components);
   const step3Components = useSelector((state) => state.admin.step3Components);
 
+  useEffect(() => {
+    const sessionId = localStorage.getItem("sessionId");
+    if (sessionId) {
+      apiClient
+        .get(`/users/progress/${sessionId}`)
+        .then((response) => {
+          const { currentStep, formData } = response.data;
+          setCurrentStep(currentStep);
+          setFormData((prevData) => ({
+            ...prevData,
+            ...JSON.parse(formData),
+          }));
+          updateProgress(currentStep);
+        })
+        .catch((error) => {
+          if (error.response && error.response.status === 404) {
+            console.log("User not found, starting fresh.");
+          } else {
+            console.error("Error loading progress:", error);
+          }
+        });
+    } else {
+      const newSessionId = generateSessionId();
+      localStorage.setItem("sessionId", newSessionId);
+    }
+  }, []);
+
+  const generateSessionId = () => {
+    return Math.random().toString(36).substr(2, 9);
+  };
+
+  const saveProgress = (updatedFormData = formData) => {
+    const sessionId = localStorage.getItem("sessionId");
+    apiClient
+      .post(`/users/saveProgress`, {
+        sessionId,
+        step: currentStep,
+        formData: JSON.stringify(updatedFormData),
+      })
+      .then(() => console.log("Progress saved successfully."))
+      .catch((error) => console.error("Error saving progress:", error));
+  };
+
   const saveStepData = (data) => {
-    setFormData((prevData) => ({ ...prevData, ...data }));
+    setFormData((prevData) => {
+      const newData = { ...prevData, ...data };
+      saveProgress(newData);
+      return newData;
+    });
   };
 
   const updateProgress = (step) => {
@@ -31,6 +87,7 @@ const Wizard = () => {
       const nextStep = currentStep + 1;
       setCurrentStep(nextStep);
       updateProgress(nextStep);
+      saveProgress();
     }
   };
 
@@ -43,18 +100,38 @@ const Wizard = () => {
   };
 
   const submitForm = async () => {
+    const sessionId = localStorage.getItem("sessionId");
+
+    if (!sessionId) {
+      console.error("Session ID is missing.");
+      return;
+    }
+
     try {
-      await apiClient.post(`/users`, formData);
+      await apiClient.post(`/users/submit`, {
+        ...formData,
+        sessionId,
+      });
       setShowMessage(true);
+      localStorage.removeItem("sessionId");
     } catch (error) {
-      console.error("Error saving data:", error);
+      console.error("Error submitting data:", error);
     }
   };
 
   const handleCloseForm = () => {
     setShowMessage(false);
     setCurrentStep(0);
-    setFormData({});
+    setFormData({
+      email: "",
+      password: "",
+      aboutMe: "",
+      street: "",
+      city: "",
+      state: "",
+      zipCode: "",
+      birthDate: "",
+    });
     setProgress(0);
   };
 
@@ -94,7 +171,7 @@ const Wizard = () => {
           Welcome To The Onboarding Wizard
         </h1>
         <div className="w-full flex justify-center">
-          <div className="w-3/4 bg-gray-200 rounded-full dark:bg-gray-700 mb-4">
+          <div className="w-3/4 md:w-1/2 bg-gray-200 rounded-full dark:bg-gray-700 mb-4">
             <div
               className="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
               style={{ width: `${progress}%` }}

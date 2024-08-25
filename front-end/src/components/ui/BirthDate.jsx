@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 const BirthDate = ({ saveStepData, formData }) => {
-  const [birthDate, setBirthDate] = useState(formData.birthDate || "");
+  const [birthDate, setBirthDate] = useState(formData?.birthDate || "");
 
   useEffect(() => {
     saveStepData({ birthDate });

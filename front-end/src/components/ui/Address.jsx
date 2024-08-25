@@ -1,21 +1,34 @@
 import React, { useEffect, useState } from "react";
 
 const Address = ({ saveStepData, formData }) => {
-  const [street, setStreet] = useState(formData.street || "");
-  const [city, setCity] = useState(formData.city || "");
-  const [state, setState] = useState(formData.state || "");
-  const [zipCode, setZipCode] = useState(formData.zipCode || "");
+  const [street, setStreet] = useState(formData?.street || "");
+  const [city, setCity] = useState(formData?.city || "");
+  const [state, setState] = useState(formData?.state || "");
+  const [zipCode, setZipCode] = useState(formData?.zipCode || "");
 
   useEffect(() => {
-    saveStepData({ street, city, state, zipCode });
+    const data = { street, city, state, zipCode };
+    saveStepData(data);
   }, [street, city, state, zipCode, saveStepData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "street") setStreet(value);
-    if (name === "city") setCity(value);
-    if (name === "state") setState(value);
-    if (name === "zipcode") setZipCode(value);
+    switch (name) {
+      case "street":
+        setStreet(value);
+        break;
+      case "city":
+        setCity(value);
+        break;
+      case "state":
+        setState(value);
+        break;
+      case "zipcode":
+        setZipCode(value);
+        break;
+      default:
+        break;
+    }
   };
 
   return (

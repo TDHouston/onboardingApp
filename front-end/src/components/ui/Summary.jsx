@@ -1,7 +1,6 @@
 import React from "react";
 
 const Summary = ({ formData, prevStep, submitForm }) => {
-  console.log("Final form data:", formData); // Debugging line
   return (
     <div className="w-7/12 md:w-1/3">
       <h2 className="font-bold mb-4">Review Your Information:</h2>

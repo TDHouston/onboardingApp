@@ -41,10 +41,4 @@ public class AdminController {
         return ResponseEntity.ok(config);
     }
 
-    @DeleteMapping("/components/{id}")
-    public void deleteUser(@PathVariable Long id) {
-        adminService.deleteComponentConfig(id);
-    }
-
-
 }
