@@ -30,19 +30,50 @@ const Wizard = () => {
 
   useEffect(() => {
     dispatch(fetchComponentConfig());
-
-    let sessionId = localStorage.getItem("sessionId");
-    const email = localStorage.getItem("email");
-    const password = localStorage.getItem("password");
-
-    if (email && password) {
-      createUserOrLoadExisting(email, password);
-    } else if (sessionId) {
-      loadSessionProgress(sessionId);
-    }
+    resetSession();
   }, [dispatch]);
 
-  const createUserOrLoadExisting = async (email, password) => {
+  const resetSession = () => {
+    localStorage.removeItem("sessionId");
+    setCurrentStep(0);
+    setFormData({
+      email: "",
+      password: "",
+      aboutMe: "",
+      street: "",
+      city: "",
+      state: "",
+      zipCode: "",
+      birthDate: "",
+    });
+    setProgress(0);
+  };
+
+  const handleEmailSubmit = async (email, password) => {
+    try {
+      const response = await apiClient.get(`/users/${email}`);
+      const { sessionId, formData, currentStep } = response.data;
+
+      localStorage.setItem("sessionId", sessionId);
+      localStorage.setItem("email", email);
+      localStorage.setItem("password", password);
+
+      setCurrentStep(currentStep);
+      setFormData((prevData) => ({
+        ...prevData,
+        ...JSON.parse(formData),
+      }));
+      updateProgress(currentStep);
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        createNewUser(email, password);
+      } else {
+        console.error("Error loading user data:", error);
+      }
+    }
+  };
+
+  const createNewUser = async (email, password) => {
     try {
       const response = await apiClient.post(`/users/create`, {
         email,
@@ -61,32 +92,8 @@ const Wizard = () => {
       }));
       updateProgress(currentStep);
     } catch (error) {
-      console.error("Error creating user or loading existing data:", error);
+      console.error("Error creating user:", error);
     }
-  };
-
-  const loadSessionProgress = async (sessionId) => {
-    try {
-      const response = await apiClient.get(`/users/progress/${sessionId}`);
-      const { currentStep, formData } = response.data;
-
-      setCurrentStep(currentStep);
-      setFormData((prevData) => ({
-        ...prevData,
-        ...JSON.parse(formData),
-      }));
-      updateProgress(currentStep);
-    } catch (error) {
-      if (error.response && error.response.status === 404) {
-        console.log("User not found, starting fresh.");
-      } else {
-        console.error("Error loading progress:", error);
-      }
-    }
-  };
-
-  const generateSessionId = () => {
-    return Math.random().toString(36).substr(2, 9);
   };
 
   const saveProgress = (updatedFormData = formData) => {
@@ -157,9 +164,7 @@ const Wizard = () => {
       await apiClient.put(`/users/submit`, formattedData);
 
       setShowMessage(true);
-      localStorage.removeItem("sessionId");
-      localStorage.removeItem("email");
-      localStorage.removeItem("password");
+      resetSession();
     } catch (error) {
       console.error("Error submitting data:", error);
     }
@@ -167,18 +172,7 @@ const Wizard = () => {
 
   const handleCloseForm = () => {
     setShowMessage(false);
-    setCurrentStep(0);
-    setFormData({
-      email: "",
-      password: "",
-      aboutMe: "",
-      street: "",
-      city: "",
-      state: "",
-      zipCode: "",
-      birthDate: "",
-    });
-    setProgress(0);
+    resetSession();
   };
 
   const renderComponent = (component) => {
@@ -232,9 +226,7 @@ const Wizard = () => {
         </div>
       </header>
 
-      {currentStep === 0 && (
-        <StepOne nextStep={nextStep} saveStepData={saveStepData} />
-      )}
+      {currentStep === 0 && <StepOne handleEmailSubmit={handleEmailSubmit} />}
       {currentStep === 1 && (
         <div className="w-11/12 md:w-5/6">
           {step2Components.map((component) => renderComponent(component))}

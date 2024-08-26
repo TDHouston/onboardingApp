@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import apiClient from "../features/apiClient";
 
-const StepOne = ({ nextStep, saveStepData }) => {
+const StepOne = ({ nextStep, saveStepData, handleEmailSubmit }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -12,16 +11,9 @@ const StepOne = ({ nextStep, saveStepData }) => {
       localStorage.setItem("email", email);
       localStorage.setItem("password", password);
 
-      const response = await apiClient.post("/users/create", {
-        email,
-        password,
-      });
+      await handleEmailSubmit(email, password);
 
-      const { sessionId } = response.data;
-
-      localStorage.setItem("sessionId", sessionId);
       saveStepData({ email, password });
-
       nextStep();
     } catch (err) {
       console.error("Error creating or loading user:", err);
