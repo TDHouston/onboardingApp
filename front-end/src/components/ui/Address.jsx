@@ -23,7 +23,7 @@ const Address = ({ saveStepData, formData }) => {
       case "state":
         setState(value);
         break;
-      case "zipcode":
+      case "zipCode":
         setZipCode(value);
         break;
       default:
@@ -95,15 +95,15 @@ const Address = ({ saveStepData, formData }) => {
 
       <div className="sm:col-span-2 mt-2">
         <label
-          htmlFor="zipcode"
+          htmlFor="zipCode"
           className="block text-sm font-medium leading-6 text-gray-900"
         >
           ZIP / Postal code
         </label>
         <div>
           <input
-            id="zipcode"
-            name="zipcode"
+            id="zipCode"
+            name="zipCode"
             type="text"
             autoComplete="zipcode"
             value={zipCode}

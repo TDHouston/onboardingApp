@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-
 @CrossOrigin(origins = "${frontend.url}")
 @RestController
 @RequestMapping("/api/users")
@@ -22,8 +21,8 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/create")
-    public ResponseEntity<User> createUser(@RequestBody Map<String, String> credentials) {
-        User user = userService.saveUser(credentials.get("email"), credentials.get("password"));
+    public ResponseEntity<User> createOrUpdateUser(@RequestBody Map<String, String> credentials) {
+        User user = userService.findOrCreateUser(credentials.get("email"), credentials.get("password"));
         return ResponseEntity.ok(user);
     }
 
@@ -33,11 +32,11 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @PostMapping("/submit")
-    public ResponseEntity<?> submitFormData(@RequestBody User user) {
+    @PutMapping("/submit")
+    public ResponseEntity<?> updateFormData(@RequestBody User user) {
         try {
-            User savedUser = userService.saveFinalData(user);
-            return ResponseEntity.ok(savedUser);
+            User updatedUser = userService.saveFinalData(user);
+            return ResponseEntity.ok(updatedUser);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
@@ -49,16 +48,21 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @GetMapping("/{email}")
+    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
+        User user = userService.getUserByEmail(email);
+        return ResponseEntity.ok(user);
+    }
+
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/user/{id}")
     public ResponseEntity<Optional<User>> getUserById(@PathVariable Long id) {
         Optional<User> user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
-
 }

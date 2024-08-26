@@ -4,9 +4,7 @@ const AboutMe = ({ saveStepData, formData }) => {
   const [aboutMe, setAboutMe] = useState(formData.aboutMe || "");
 
   useEffect(() => {
-    return () => {
-      saveStepData({ aboutMe });
-    };
+    saveStepData({ aboutMe });
   }, [aboutMe, saveStepData]);
 
   const handleChange = (e) => {

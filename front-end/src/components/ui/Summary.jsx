@@ -4,6 +4,7 @@ const Summary = ({ formData, prevStep, submitForm }) => {
   return (
     <div className="w-7/12 md:w-1/3">
       <h2 className="font-bold mb-4">Review Your Information:</h2>
+
       <div className="mb-4">
         <strong>Email:</strong> {formData.email}
       </div>
@@ -28,6 +29,7 @@ const Summary = ({ formData, prevStep, submitForm }) => {
       <div className="mb-4">
         <strong>ZIP / Postal Code:</strong> {formData.zipCode}
       </div>
+
       <div className="w-full flex flex-row justify-between mt-5">
         <button
           onClick={prevStep}

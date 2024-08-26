@@ -32,30 +32,57 @@ const Wizard = () => {
     dispatch(fetchComponentConfig());
 
     let sessionId = localStorage.getItem("sessionId");
-    if (!sessionId) {
-      sessionId = generateSessionId();
-      localStorage.setItem("sessionId", sessionId);
-    }
+    const email = localStorage.getItem("email");
+    const password = localStorage.getItem("password");
 
-    apiClient
-      .get(`/users/progress/${sessionId}`)
-      .then((response) => {
-        const { currentStep, formData } = response.data;
-        setCurrentStep(currentStep);
-        setFormData((prevData) => ({
-          ...prevData,
-          ...JSON.parse(formData),
-        }));
-        updateProgress(currentStep);
-      })
-      .catch((error) => {
-        if (error.response && error.response.status === 404) {
-          console.log("User not found, starting fresh.");
-        } else {
-          console.error("Error loading progress:", error);
-        }
-      });
+    if (email && password) {
+      createUserOrLoadExisting(email, password);
+    } else {
+      if (!sessionId) {
+        sessionId = generateSessionId();
+        localStorage.setItem("sessionId", sessionId);
+      }
+
+      apiClient
+        .get(`/users/progress/${sessionId}`)
+        .then((response) => {
+          const { currentStep, formData } = response.data;
+          setCurrentStep(currentStep);
+          setFormData((prevData) => ({
+            ...prevData,
+            ...JSON.parse(formData),
+          }));
+          updateProgress(currentStep);
+        })
+        .catch((error) => {
+          if (error.response && error.response.status === 404) {
+            console.log("User not found, starting fresh.");
+          } else {
+            console.error("Error loading progress:", error);
+          }
+        });
+    }
   }, [dispatch]);
+
+  const createUserOrLoadExisting = async (email, password) => {
+    try {
+      const response = await apiClient.post(`/users/create`, {
+        email,
+        password,
+      });
+      const { sessionId, formData, currentStep } = response.data;
+
+      localStorage.setItem("sessionId", sessionId);
+      setCurrentStep(currentStep);
+      setFormData((prevData) => ({
+        ...prevData,
+        ...JSON.parse(formData),
+      }));
+      updateProgress(currentStep);
+    } catch (error) {
+      console.error("Error creating user or loading existing data:", error);
+    }
+  };
 
   const generateSessionId = () => {
     return Math.random().toString(36).substr(2, 9);
@@ -113,12 +140,25 @@ const Wizard = () => {
     }
 
     try {
-      await apiClient.post(`/users/submit`, {
-        ...formData,
+      const formattedData = {
         sessionId,
-      });
+        email: formData.email,
+        password: formData.password,
+        aboutMe: formData.aboutMe,
+        street: formData.street,
+        city: formData.city,
+        state: formData.state,
+        zipCode: formData.zipCode,
+        birthDate: formData.birthDate,
+        formData: JSON.stringify(formData),
+      };
+
+      await apiClient.put(`/users/submit`, formattedData);
+
       setShowMessage(true);
       localStorage.removeItem("sessionId");
+      localStorage.removeItem("email");
+      localStorage.removeItem("password");
     } catch (error) {
       console.error("Error submitting data:", error);
     }

@@ -9,10 +9,14 @@ const StepOne = ({ nextStep, saveStepData }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      localStorage.setItem("email", email);
+      localStorage.setItem("password", password);
+
       const response = await apiClient.post("/users/create", {
         email,
         password,
       });
+
       const { sessionId } = response.data;
 
       localStorage.setItem("sessionId", sessionId);
@@ -20,8 +24,8 @@ const StepOne = ({ nextStep, saveStepData }) => {
 
       nextStep();
     } catch (err) {
-      console.error("Error creating user:", err);
-      setError("Failed to create user. Please try again.");
+      console.error("Error creating or loading user:", err);
+      setError("Failed to create or load user. Please try again.");
     }
   };
 

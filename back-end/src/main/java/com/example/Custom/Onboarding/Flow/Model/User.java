@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 @Entity
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = "email")})
 public class User {
 
     @Id
@@ -14,7 +15,9 @@ public class User {
     @Column(unique = true)
     private String sessionId;
 
+    @Column(unique = true, nullable = false)
     private String email;
+
     private String password;
     private String aboutMe;
     private String street;
