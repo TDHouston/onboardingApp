@@ -13,9 +13,9 @@ import java.util.Map;
 import java.util.Optional;
 
 
+@CrossOrigin(origins = "${frontend.url}")
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "https://onboarding-app-ashy.vercel.app", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
 public class UserController {
 
     @Autowired
