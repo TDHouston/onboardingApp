@@ -8,11 +8,7 @@ const StepOne = ({ nextStep, saveStepData, handleEmailSubmit }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      localStorage.setItem("email", email);
-      localStorage.setItem("password", password);
-
-      await handleEmailSubmit(email, password);
-
+      await handleEmailSubmit(email, password); 
       saveStepData({ email, password });
       nextStep();
     } catch (err) {
