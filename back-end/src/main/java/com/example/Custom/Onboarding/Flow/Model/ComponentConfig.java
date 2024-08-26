@@ -16,5 +16,6 @@ public class ComponentConfig {
 
     private String componentName;
     private int pageNumber;
+    private int position;
 
 }

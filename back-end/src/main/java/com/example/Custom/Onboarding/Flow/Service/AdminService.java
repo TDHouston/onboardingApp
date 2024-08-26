@@ -4,9 +4,9 @@ import com.example.Custom.Onboarding.Flow.Model.ComponentConfig;
 import com.example.Custom.Onboarding.Flow.Repository.ComponentConfigRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AdminService {
@@ -22,28 +22,43 @@ public class AdminService {
         return componentConfigRepository.findAll();
     }
 
-    public Optional<ComponentConfig> getComponentConfigById(Long id) {
-        return componentConfigRepository.findById(id);
+    public ComponentConfig getComponentConfigById(Long id) {
+        return componentConfigRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Component Configuration not found with id: " + id));
     }
 
     public ComponentConfig updateComponentConfig(Long id, ComponentConfig configDetails) {
-        Optional<ComponentConfig> componentConfigOptional = componentConfigRepository.findById(id);
+        ComponentConfig existingConfig = getComponentConfigById(id);
 
-        if (componentConfigOptional.isPresent()) {
-            ComponentConfig config = componentConfigOptional.get();
+        existingConfig.setPageNumber(configDetails.getPageNumber());
+        existingConfig.setComponentName(configDetails.getComponentName());
+        existingConfig.setPosition(configDetails.getPosition());
 
-            config.setPageNumber(configDetails.getPageNumber());
-            config.setComponentName(configDetails.getComponentName());
+        return componentConfigRepository.save(existingConfig);
+    }
 
-            return componentConfigRepository.save(config);
-        } else {
-            throw new RuntimeException("Component Configuration not found with id: " + id);
+    @Transactional
+    public void batchUpdateComponentConfig(List<ComponentConfig> newConfigs) {
+        componentConfigRepository.deleteAll();
+
+        for (ComponentConfig config : newConfigs) {
+            componentConfigRepository.save(config);
         }
+
+        validateComponentConfig();
     }
 
     public void deleteComponentConfig(Long id) {
-        Optional<ComponentConfig> componentConfigOptional = componentConfigRepository.findById(id);
-        componentConfigOptional.ifPresent(config -> componentConfigRepository.delete(config));
+        componentConfigRepository.deleteById(id);
+        validateComponentConfig();
     }
 
+    private void validateComponentConfig() {
+        long step2Count = componentConfigRepository.countByPageNumber(2);
+        long step3Count = componentConfigRepository.countByPageNumber(3);
+
+        if (step2Count == 0 || step3Count == 0) {
+            throw new RuntimeException("Each step must have at least one component assigned.");
+        }
+    }
 }

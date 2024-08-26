@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import StepOne from "./StepOne";
 import Birthdate from "./ui/BirthDate";
 import AboutMe from "./ui/AboutMe";
 import Address from "./ui/Address";
 import Summary from "./ui/Summary";
 import apiClient from "../features/apiClient";
+import { fetchComponentConfig } from "../features/admin/adminSlice";
 
 const Wizard = () => {
+  const dispatch = useDispatch();
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
   const [formData, setFormData] = useState({
@@ -22,35 +24,38 @@ const Wizard = () => {
   });
   const [showMessage, setShowMessage] = useState(false);
 
-  const step2Components = useSelector((state) => state.admin.step2Components);
-  const step3Components = useSelector((state) => state.admin.step3Components);
+  const { step2Components, step3Components, loading } = useSelector(
+    (state) => state.admin
+  );
 
   useEffect(() => {
-    const sessionId = localStorage.getItem("sessionId");
-    if (sessionId) {
-      apiClient
-        .get(`/users/progress/${sessionId}`)
-        .then((response) => {
-          const { currentStep, formData } = response.data;
-          setCurrentStep(currentStep);
-          setFormData((prevData) => ({
-            ...prevData,
-            ...JSON.parse(formData),
-          }));
-          updateProgress(currentStep);
-        })
-        .catch((error) => {
-          if (error.response && error.response.status === 404) {
-            console.log("User not found, starting fresh.");
-          } else {
-            console.error("Error loading progress:", error);
-          }
-        });
-    } else {
-      const newSessionId = generateSessionId();
-      localStorage.setItem("sessionId", newSessionId);
+    dispatch(fetchComponentConfig());
+
+    let sessionId = localStorage.getItem("sessionId");
+    if (!sessionId) {
+      sessionId = generateSessionId();
+      localStorage.setItem("sessionId", sessionId);
     }
-  }, []);
+
+    apiClient
+      .get(`/users/progress/${sessionId}`)
+      .then((response) => {
+        const { currentStep, formData } = response.data;
+        setCurrentStep(currentStep);
+        setFormData((prevData) => ({
+          ...prevData,
+          ...JSON.parse(formData),
+        }));
+        updateProgress(currentStep);
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 404) {
+          console.log("User not found, starting fresh.");
+        } else {
+          console.error("Error loading progress:", error);
+        }
+      });
+  }, [dispatch]);
 
   const generateSessionId = () => {
     return Math.random().toString(36).substr(2, 9);
@@ -135,6 +140,23 @@ const Wizard = () => {
     setProgress(0);
   };
 
+  const renderComponent = (component) => {
+    switch (component) {
+      case "Birthdate":
+        return <Birthdate saveStepData={saveStepData} formData={formData} />;
+      case "AboutMe":
+        return <AboutMe saveStepData={saveStepData} formData={formData} />;
+      case "Address":
+        return <Address saveStepData={saveStepData} formData={formData} />;
+      default:
+        return null;
+    }
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   if (showMessage) {
     return (
       <div className="w-screen h-screen flex flex-col justify-center items-center">
@@ -150,19 +172,6 @@ const Wizard = () => {
       </div>
     );
   }
-
-  const renderComponent = (component) => {
-    switch (component) {
-      case "Birthdate":
-        return <Birthdate saveStepData={saveStepData} formData={formData} />;
-      case "AboutMe":
-        return <AboutMe saveStepData={saveStepData} formData={formData} />;
-      case "Address":
-        return <Address saveStepData={saveStepData} formData={formData} />;
-      default:
-        return null;
-    }
-  };
 
   return (
     <div className="w-screen h-screen flex flex-col justify-center items-center">
