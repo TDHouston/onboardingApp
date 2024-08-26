@@ -37,30 +37,8 @@ const Wizard = () => {
 
     if (email && password) {
       createUserOrLoadExisting(email, password);
-    } else {
-      if (!sessionId) {
-        sessionId = generateSessionId();
-        localStorage.setItem("sessionId", sessionId);
-      }
-
-      apiClient
-        .get(`/users/progress/${sessionId}`)
-        .then((response) => {
-          const { currentStep, formData } = response.data;
-          setCurrentStep(currentStep);
-          setFormData((prevData) => ({
-            ...prevData,
-            ...JSON.parse(formData),
-          }));
-          updateProgress(currentStep);
-        })
-        .catch((error) => {
-          if (error.response && error.response.status === 404) {
-            console.log("User not found, starting fresh.");
-          } else {
-            console.error("Error loading progress:", error);
-          }
-        });
+    } else if (sessionId) {
+      loadSessionProgress(sessionId);
     }
   }, [dispatch]);
 
@@ -73,6 +51,9 @@ const Wizard = () => {
       const { sessionId, formData, currentStep } = response.data;
 
       localStorage.setItem("sessionId", sessionId);
+      localStorage.setItem("email", email);
+      localStorage.setItem("password", password);
+
       setCurrentStep(currentStep);
       setFormData((prevData) => ({
         ...prevData,
@@ -81,6 +62,26 @@ const Wizard = () => {
       updateProgress(currentStep);
     } catch (error) {
       console.error("Error creating user or loading existing data:", error);
+    }
+  };
+
+  const loadSessionProgress = async (sessionId) => {
+    try {
+      const response = await apiClient.get(`/users/progress/${sessionId}`);
+      const { currentStep, formData } = response.data;
+
+      setCurrentStep(currentStep);
+      setFormData((prevData) => ({
+        ...prevData,
+        ...JSON.parse(formData),
+      }));
+      updateProgress(currentStep);
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        console.log("User not found, starting fresh.");
+      } else {
+        console.error("Error loading progress:", error);
+      }
     }
   };
 
