@@ -8,13 +8,15 @@ import Nav from "./components/Nav";
 const App = () => {
   return (
     <Router>
-      <div>
+      <div className="min-h-screen bg-gray-50">
         <Nav />
-        <Routes>
-          <Route path="/" element={<Wizard />} />
-          <Route path="/admin" element={<AdminPanel />} />
-          <Route path="/data" element={<DataTable />} />
-        </Routes>
+        <main className="transition-all duration-300">
+          <Routes>
+            <Route path="/" element={<Wizard />} />
+            <Route path="/admin" element={<AdminPanel />} />
+            <Route path="/data" element={<DataTable />} />
+          </Routes>
+        </main>
       </div>
     </Router>
   );
