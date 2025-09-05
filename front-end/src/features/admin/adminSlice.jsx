@@ -5,6 +5,7 @@ export const fetchComponentConfig = createAsyncThunk(
   "admin/fetchComponentConfig",
   async () => {
     const response = await apiClient.get("/admin/components");
+    console.log("API Response:", response.data);
     return response.data;
   }
 );
@@ -54,10 +55,11 @@ const adminSlice = createSlice({
       })
       .addCase(fetchComponentConfig.fulfilled, (state, action) => {
         state.loading = false;
-        state.step2Components = action.payload
+        const payload = Array.isArray(action.payload) ? action.payload : [];
+        state.step2Components = payload
           .filter((config) => config.pageNumber === 2)
           .map((config) => config.componentName);
-        state.step3Components = action.payload
+        state.step3Components = payload
           .filter((config) => config.pageNumber === 3)
           .map((config) => config.componentName);
       })

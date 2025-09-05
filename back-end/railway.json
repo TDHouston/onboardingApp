@@ -5,7 +5,7 @@
     "buildCommand": "mvn clean package -DskipTests"
   },
   "deploy": {
-    "startCommand": "java -jar target/back-end-0.0.1-SNAPSHOT.jar",
+    "startCommand": "java -jar -Dspring.profiles.active=prod target/back-end-0.0.1-SNAPSHOT.jar",
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
   }
