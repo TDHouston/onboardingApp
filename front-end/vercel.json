@@ -1,8 +1,5 @@
 {
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "http://OBA-env-1.eba-xktipgyh.us-east-1.elasticbeanstalk.com:8080/api/$1"
-    }
-  ]
+  "buildCommand": "npm run build",
+  "outputDirectory": "build",
+  "framework": "create-react-app"
 }

@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = "email")})
+@Table(name = "user", uniqueConstraints = {@UniqueConstraint(columnNames = "email")})
 public class User {
 
     @Id
@@ -27,5 +27,15 @@ public class User {
     private String birthDate;
     private String formData;
     private int currentStep;
+
+    // Custom getter to display placeholder instead of actual password hash
+    public String getPassword() {
+        return this.password != null ? "••••••••" : null;
+    }
+
+    // Method to get the actual password hash (for authentication)
+    public String getActualPassword() {
+        return this.password;
+    }
 
 }

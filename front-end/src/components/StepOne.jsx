@@ -7,13 +7,20 @@ const StepOne = ({ nextStep, saveStepData, handleEmailSubmit }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
+    
     try {
-      await handleEmailSubmit(email, password); 
+      // handleEmailSubmit should complete before proceeding
+      await handleEmailSubmit(email, password);
+      // Save data after successful submission
       saveStepData({ email, password });
+      // Move to next step only after everything is saved
       nextStep();
     } catch (err) {
       console.error("Error creating or loading user:", err);
-      setError("Failed to create or load user. Please try again.");
+      // Show more specific error message if available
+      const errorMessage = err.response?.data?.message || err.message || "Failed to create or load user. Please try again.";
+      setError(errorMessage);
     }
   };
 

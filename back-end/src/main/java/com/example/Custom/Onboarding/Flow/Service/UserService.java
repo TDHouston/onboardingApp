@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,11 +21,26 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Transactional
     public User findOrCreateUser(String email, String password) {
         Optional<User> existingUser = userRepository.findByEmail(email);
-        return existingUser.orElseGet(() -> saveUser(email, password));
+        
+        if (existingUser.isPresent()) {
+            User user = existingUser.get();
+            // Verify password for existing user
+            if (passwordEncoder.matches(password, user.getActualPassword())) {
+                return user;
+            } else {
+                throw new RuntimeException("Invalid password for existing user");
+            }
+        } else {
+            // Create new user with hashed password
+            return saveUser(email, password);
+        }
     }
 
     public User getUserBySessionId(String sessionId) {
@@ -51,7 +67,7 @@ public class UserService {
             User userToUpdate = existingUser.get();
 
             userToUpdate.setEmail(user.getEmail());
-            userToUpdate.setPassword(user.getPassword());
+            // Don't update password here as it's already hashed
             userToUpdate.setBirthDate(user.getBirthDate());
             userToUpdate.setAboutMe(user.getAboutMe());
             userToUpdate.setStreet(user.getStreet());
@@ -87,7 +103,7 @@ public class UserService {
     private User saveUser(String email, String password) {
         User user = new User();
         user.setEmail(email);
-        user.setPassword(password);
+        user.setPassword(passwordEncoder.encode(password)); // Hash password before saving
         user.setSessionId(UUID.randomUUID().toString());
         user.setCurrentStep(0);
         return userRepository.save(user);

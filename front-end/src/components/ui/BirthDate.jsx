@@ -5,7 +5,7 @@ const BirthDate = ({ saveStepData, formData }) => {
 
   useEffect(() => {
     saveStepData({ birthDate });
-  }, [birthDate, saveStepData]);
+  }, [birthDate]);
 
   const handleChange = (e) => {
     setBirthDate(e.target.value);

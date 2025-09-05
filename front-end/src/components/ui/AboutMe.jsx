@@ -5,7 +5,7 @@ const AboutMe = ({ saveStepData, formData }) => {
 
   useEffect(() => {
     saveStepData({ aboutMe });
-  }, [aboutMe, saveStepData]);
+  }, [aboutMe]);
 
   const handleChange = (e) => {
     setAboutMe(e.target.value);

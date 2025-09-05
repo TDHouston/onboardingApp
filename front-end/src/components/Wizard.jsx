@@ -33,23 +33,54 @@ const Wizard = () => {
   }, [dispatch]);
 
   const handleEmailSubmit = async (email, password) => {
-    localStorage.setItem("email", email);
-    localStorage.setItem("password", password);
+    try {
+      const response = await apiClient.post("/users/create", {
+        email,
+        password,
+      });
 
-    const response = await apiClient.post("/users/create", {
-      email,
-      password,
-    });
+      const { sessionId, formData: savedFormData, currentStep: savedStep } = response.data;
 
-    const { sessionId, formData, currentStep } = response.data;
-
-    localStorage.setItem("sessionId", sessionId);
-    setCurrentStep(currentStep);
-    setFormData((prevData) => ({
-      ...prevData,
-      ...JSON.parse(formData),
-    }));
-    updateProgress(currentStep);
+      // Store session info
+      localStorage.setItem("sessionId", sessionId);
+      localStorage.setItem("email", email);
+      
+      // Update state with saved data if exists
+      if (savedFormData) {
+        try {
+          const parsedData = JSON.parse(savedFormData);
+          setFormData((prevData) => ({
+            ...prevData,
+            email,
+            password,
+            ...parsedData,
+          }));
+        } catch (parseError) {
+          console.error("Error parsing saved form data:", parseError);
+          setFormData((prevData) => ({
+            ...prevData,
+            email,
+            password,
+          }));
+        }
+      } else {
+        setFormData((prevData) => ({
+          ...prevData,
+          email,
+          password,
+        }));
+      }
+      
+      // Update step and progress
+      const stepToSet = savedStep || 1;
+      setCurrentStep(stepToSet);
+      updateProgress(stepToSet);
+      
+      return response.data;
+    } catch (error) {
+      console.error("Error in handleEmailSubmit:", error);
+      throw error;
+    }
   };
 
   const saveProgress = (updatedFormData = formData) => {

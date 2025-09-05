@@ -12,13 +12,13 @@ public class WebConfig implements WebMvcConfigurer {
     private String[] allowedOrigins;
 
     @Value("${cors.allowed.methods}")
-    private String[] allowedMethods;
+    private String allowedMethods;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins(allowedOrigins)
-                .allowedMethods(allowedMethods)
+                .allowedMethods(allowedMethods.split(","))
                 .allowedHeaders("*")
                 .allowCredentials(true)
                 .maxAge(3600);

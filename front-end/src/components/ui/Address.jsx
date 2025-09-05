@@ -9,7 +9,7 @@ const Address = ({ saveStepData, formData }) => {
   useEffect(() => {
     const data = { street, city, state, zipCode };
     saveStepData(data);
-  }, [street, city, state, zipCode, saveStepData]);
+  }, [street, city, state, zipCode]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
