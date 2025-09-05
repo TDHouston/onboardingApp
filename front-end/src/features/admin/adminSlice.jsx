@@ -5,7 +5,6 @@ export const fetchComponentConfig = createAsyncThunk(
   "admin/fetchComponentConfig",
   async () => {
     const response = await apiClient.get("/admin/components");
-    console.log("API Response:", response.data);
     return response.data;
   }
 );

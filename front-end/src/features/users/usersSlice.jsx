@@ -3,7 +3,6 @@ import apiClient from "../apiClient";
 
 export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
   const response = await apiClient.get("/users");
-  console.log("Users API Response:", response.data);
   return response.data;
 });
 
