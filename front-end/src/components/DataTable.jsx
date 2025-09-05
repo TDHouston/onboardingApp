@@ -46,7 +46,7 @@ const DataTable = () => {
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
+            {Array.isArray(users) && users.map((user) => (
               <tr key={user.id} className="bg-white border-b">
                 <td className="px-6 py-4 font-medium text-gray-900">
                   {user.email}

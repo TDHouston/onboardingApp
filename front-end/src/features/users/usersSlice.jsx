@@ -3,6 +3,7 @@ import apiClient from "../apiClient";
 
 export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
   const response = await apiClient.get("/users");
+  console.log("Users API Response:", response.data);
   return response.data;
 });
 
@@ -18,7 +19,7 @@ const usersSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchUsers.fulfilled, (state, action) => {
-        return action.payload;
+        return Array.isArray(action.payload) ? action.payload : [];
       })
       .addCase(addUser.fulfilled, (state, action) => {
         state.push(action.payload);
